@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulario de Postulacion - Intercambios Academicos</title>
+  <style>
+    :root {
+      --azul:       #003087;
+      --azul-hover: #00256e;
+      --rojo:       #c8102e;
+      --gris-texto: #333333;
+      --gris-medio: #666666;
+      --gris-borde: #cccccc;
+      --gris-fondo: #f4f4f4;
+      --blanco:     #ffffff;
+      --verde:      #1a6b3a;
+      --verde-fondo:#e8f5ee;
+      --amarillo:   #7a5900;
+      --amarillo-fondo: #fff8e1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--gris-fondo);
+      color: var(--gris-texto);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 230px; background: var(--azul);
+      position: fixed; top: 0; left: 0; height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .cuadro-logo {
+      width: 52px; height: 52px; background: var(--blanco);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .cuadro-logo span { font-size: 18px; font-weight: 900; color: var(--azul); }
+
+    .sidebar-logo h2 { color: var(--blanco); font-size: 13px; font-weight: 700; line-height: 1.4; }
+    .sidebar-logo p { color: rgba(255,255,255,0.55); font-size: 11px; margin-top: 2px; }
+
+    .sidebar-nav { flex: 1; padding: 16px 0; overflow-y: auto; }
+
+    .nav-titulo {
+      color: rgba(255,255,255,0.4); font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; padding: 10px 20px 4px;
+    }
+
+    .nav-item {
+      display: block; padding: 10px 20px; color: rgba(255,255,255,0.75);
+      text-decoration: none; font-size: 13.5px; border-left: 3px solid transparent;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: var(--blanco); }
+
+    .nav-item.activo {
+      background: rgba(255,255,255,0.12); color: var(--blanco);
+      border-left-color: var(--rojo); font-weight: 600;
+    }
+
+    .sidebar-pie {
+      padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .usuario-mini { display: flex; align-items: center; gap: 10px; }
+
+    .avatar {
+      width: 34px; height: 34px; background: var(--rojo);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--blanco); font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+
+    .usuario-mini p { color: var(--blanco); font-size: 13px; font-weight: 600; }
+    .usuario-mini span { color: rgba(255,255,255,0.5); font-size: 11px; }
+
+    /* Main */
+    .main { margin-left: 230px; flex: 1; display: flex; flex-direction: column; }
+
+    .topbar {
+      background: var(--blanco); border-bottom: 1px solid var(--gris-borde);
+      padding: 0 28px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+
+    .topbar h1 { font-size: 18px; font-weight: 700; color: var(--azul); }
+    .topbar p { font-size: 12px; color: var(--gris-medio); }
+
+    .btn-secundario {
+      background: var(--blanco); border: 1px solid var(--gris-borde);
+      color: var(--gris-texto); padding: 8px 16px; font-size: 13px;
+      font-weight: 600; cursor: pointer;
+    }
+
+    .btn-secundario:hover { background: var(--gris-fondo); }
+
+    /* Contenido */
+    .contenido { padding: 24px 28px; }
+
+    /* Ruta de navegacion */
+    .ruta {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 13px; color: var(--gris-medio); margin-bottom: 20px;
+    }
+
+    .ruta a { color: var(--azul); text-decoration: none; font-weight: 500; }
+    .ruta a:hover { text-decoration: underline; }
+    .ruta span { font-weight: 600; color: var(--gris-texto); }
+
+    /* Info convocatoria */
+    .info-convocatoria {
+      background: var(--azul);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .info-convocatoria h2 {
+      color: var(--blanco); font-size: 17px; font-weight: 700; margin-bottom: 3px;
+    }
+
+    .info-convocatoria p {
+      color: rgba(255,255,255,0.65); font-size: 13px;
+    }
+
+    .info-convocatoria .meta {
+      text-align: right;
+    }
+
+    .info-convocatoria .meta .label {
+      color: rgba(255,255,255,0.6); font-size: 11px;
+    }
+
+    .info-convocatoria .meta .valor {
+      color: var(--blanco); font-size: 14px; font-weight: 700;
+    }
+
+    /* Pasos */
+    .pasos {
+      display: flex;
+      border: 1px solid var(--gris-borde);
+      background: var(--blanco);
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    .paso {
+      flex: 1;
+      padding: 13px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gris-medio);
+      border-right: 1px solid var(--gris-borde);
+      cursor: pointer;
+      background: var(--blanco);
+    }
+
+    .paso:last-child { border-right: none; }
+
+    .paso.activo {
+      background: var(--azul); color: var(--blanco);
+    }
+
+    .paso.completado {
+      background: var(--verde-fondo); color: var(--verde);
+    }
+
+    .num-paso {
+      width: 22px; height: 22px;
+      border: 2px solid currentColor;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+
+    .paso.activo .num-paso { border-color: var(--blanco); }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 18px;
+    }
+
+    /* Tarjeta */
+    .tarjeta {
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+      margin-bottom: 18px;
+    }
+
+    .tarjeta-cabecera {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--gris-borde);
+      background: var(--gris-fondo);
+    }
+
+    .tarjeta-cabecera h3 { font-size: 14px; font-weight: 700; color: var(--azul); }
+    .tarjeta-cabecera p { font-size: 12px; color: var(--gris-medio); margin-top: 2px; }
+
+    .tarjeta-cuerpo { padding: 20px; }
+
+    /* Campos */
+    .campo { margin-bottom: 16px; }
+
+    .campo label {
+      display: block; font-size: 11.5px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.4px; color: var(--gris-texto);
+      margin-bottom: 6px;
+    }
+
+    .campo input,
+    .campo select,
+    .campo textarea {
+      width: 100%; padding: 9px 12px;
+      border: 1px solid var(--gris-borde); font-size: 13.5px;
+      color: var(--gris-texto); background: var(--blanco); outline: none;
+      font-family: inherit;
+    }
+
+    .campo input:focus,
+    .campo select:focus,
+    .campo textarea:focus {
+      border-color: var(--azul);
+    }
+
+    .campo textarea { resize: vertical; min-height: 100px; }
+    .campo .nota { font-size: 11.5px; color: var(--gris-medio); margin-top: 4px; }
+
+    .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* Zona de carga */
+    .zona-carga {
+      border: 2px dashed var(--gris-borde);
+      padding: 22px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--gris-fondo);
+    }
+
+    .zona-carga:hover { border-color: var(--azul); background: #eef3fb; }
+    .zona-carga input[type=file] { display: none; }
+    .zona-carga p { font-size: 13px; color: var(--gris-medio); }
+    .zona-carga strong { color: var(--azul); }
+
+    .archivo-cargado {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--gris-fondo); border: 1px solid var(--gris-borde);
+      padding: 9px 13px; margin-top: 10px; font-size: 13px;
+    }
+
+    .archivo-nombre { flex: 1; font-weight: 500; color: var(--azul); }
+    .archivo-tamano { font-size: 11.5px; color: var(--gris-medio); }
+    .archivo-ok { color: var(--verde); font-weight: 700; }
+
+    /* Acciones */
+    .acciones {
+      display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px;
+    }
+
+    .btn-azul {
+      background: var(--azul); color: var(--blanco); border: none;
+      padding: 10px 22px; font-size: 13.5px; font-weight: 700; cursor: pointer;
+    }
+
+    .btn-azul:hover { background: var(--azul-hover); }
+
+    /* Panel resumen */
+    .panel-resumen { display: flex; flex-direction: column; gap: 18px; }
+
+    /* Progreso */
+    .progreso-wrap { padding: 16px 18px; }
+
+    .progreso-etiqueta {
+      display: flex; justify-content: space-between;
+      font-size: 13px; font-weight: 600; margin-bottom: 7px;
+    }
+
+    .barra-fondo { background: var(--gris-borde); height: 7px; }
+    .barra-relleno { height: 7px; background: var(--azul); }
+    .progreso-nota { font-size: 12px; color: var(--gris-medio); margin-top: 6px; }
+
+    /* Checklist */
+    .checklist { padding: 4px 18px 12px; }
+
+    .check-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--gris-borde); font-size: 13px;
+    }
+
+    .check-item:last-child { border-bottom: none; }
+    .check-ok { color: var(--verde); font-weight: 700; }
+    .check-pendiente { color: var(--gris-borde); font-weight: 700; }
+
+    /* Resumen datos */
+    .dato-resumen {
+      padding: 11px 18px;
+      border-bottom: 1px solid var(--gris-borde);
+      font-size: 13px;
+    }
+
+    .dato-resumen:last-child { border-bottom: none; }
+    .dato-resumen .label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--gris-medio); margin-bottom: 2px; }
+    .dato-resumen .valor { font-weight: 600; }
+
+    /* Modal */
+    .modal-fondo {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 200;
+      align-items: center; justify-content: center;
+    }
+
+    .modal-fondo.abierto { display: flex; }
+
+    .modal {
+      background: var(--blanco); padding: 36px 40px;
+      max-width: 400px; width: 90%; text-align: center;
+      border-top: 5px solid var(--azul);
+    }
+
+    .modal h3 {
+      font-size: 20px; font-weight: 800; color: var(--azul); margin-bottom: 10px;
+    }
+
+    .modal p { font-size: 14px; color: var(--gris-medio); line-height: 1.6; }
+
+    .modal .btn-azul {
+      margin-top: 22px; width: 100%; padding: 12px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="cuadro-logo"><span>UP</span></div>
+      <h2>Universidad Piloto de Colombia</h2>
+      <p>Intercambios Academicos</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <p class="nav-titulo">Principal</p>
+      <a class="nav-item" href="dashboard.html">Panel Principal</a>
+      <a class="nav-item" href="convocatorias.html">Convocatorias</a>
+      <a class="nav-item activo" href="#">Mis Postulaciones</a>
+      <a class="nav-item" href="#">Mis Documentos</a>
+
+      <p class="nav-titulo">Seguimiento</p>
+      <a class="nav-item" href="#">Notificaciones</a>
+      <a class="nav-item" href="#">Estado de Solicitudes</a>
+
+      <p class="nav-titulo">Cuenta</p>
+      <a class="nav-item" href="#">Mi Perfil</a>
+      <a class="nav-item" href="#">Configuracion</a>
+      <a class="nav-item" href="login.html">Cerrar Sesion</a>
+    </nav>
+
+    <div class="sidebar-pie">
+      <div class="usuario-mini">
+        <div class="avatar">JV</div>
+        <div>
+          <p>Juan Vanegas</p>
+          <span>Ing. de Sistemas</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>Nueva Postulacion</h1>
+        <p>Completa todos los pasos para enviar tu solicitud</p>
+      </div>
+      <button class="btn-secundario" onclick="window.location.href='convocatorias.html'">&larr; Volver</button>
+    </header>
+
+    <div class="contenido">
+
+      <!-- Ruta de navegacion -->
+      <div class="ruta">
+        <a href="dashboard.html">Inicio</a> &rsaquo;
+        <a href="convocatorias.html">Convocatorias</a> &rsaquo;
+        <span>Nueva Postulacion</span>
+      </div>
+
+      <!-- Info convocatoria -->
+      <div class="info-convocatoria">
+        <div>
+          <h2>Universidad Complutense de Madrid</h2>
+          <p>Espana - Ingenieria - 1 Semestre - Presencial</p>
+        </div>
+        <div class="meta">
+          <div class="label">Cierre de convocatoria</div>
+          <div class="valor">30 de abril, 2026</div>
+          <div style="margin-top:8px;" class="label">Cupos disponibles</div>
+          <div class="valor">2 de 2</div>
+        </div>
+      </div>
+
+      <!-- Pasos -->
+      <div class="pasos">
+        <div class="paso completado" onclick="irPaso(1)">
+          <div class="num-paso">OK</div>
+          Datos Personales
+        </div>
+        <div class="paso activo" onclick="irPaso(2)">
+          <div class="num-paso">2</div>
+          Info Academica
+        </div>
+        <div class="paso" onclick="irPaso(3)">
+          <div class="num-paso">3</div>
+          Documentos
+        </div>
+        <div class="paso" onclick="irPaso(4)">
+          <div class="num-paso">4</div>
+          Motivacion
+        </div>
+        <div class="paso" onclick="irPaso(5)">
+          <div class="num-paso">5</div>
+          Revision y Envio
+        </div>
+      </div>
+
+      <!-- Layout principal -->
+      <div class="layout">
+
+        <!-- Formulario -->
+        <div>
+
+          <!-- Informacion academica -->
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Informacion Academica</h3>
+              <p>Datos de tu carrera y rendimiento actual</p>
+            </div>
+            <div class="tarjeta-cuerpo">
+              <div class="fila">
+                <div class="campo">
+                  <label>Programa Academico</label>
+                  <select>
+                    <option selected>Ingenieria de Sistemas</option>
+                    <option>Ingenieria Civil</option>
+                  </select>
+                </div>
+                <div class="campo">
+                  <label>Semestre Actual</label>
+                  <select>
+                    <option>5. semestre</option>
+                    <option>6. semestre</option>
+                    <option selected>7. semestre</option>
+                    <option>8. semestre</option>
+                  </select>
+                </div>
+              </div>
+              <div class="fila">
+                <div class="campo">
+                  <label>Promedio Acumulado</label>
+                  <input type="number" step="0.1" min="0" max="5" value="4.1" />
+                  <p class="nota">Escala 0.0 - 5.0. Minimo requerido: 3.5</p>
+                </div>
+                <div class="campo">
+                  <label>Creditos Aprobados</label>
+                  <input type="number" value="120" />
+                </div>
+              </div>
+              <div class="campo">
+                <label>Materias a cursar en el intercambio</label>
+                <textarea placeholder="Lista las asignaturas que planeas tomar en la universidad destino..."></textarea>
+                <p class="nota">Consulta el catalogo de la Complutense antes de llenar este campo.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Idioma -->
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Competencia en Idiomas</h3>
+              <p>Nivel de manejo del idioma requerido por la universidad destino</p>
+            </div>
+            <div class="tarjeta-cuerpo">
+              <div class="fila">
+                <div class="campo">
+                  <label>Idioma Principal</label>
+                  <select>
+                    <option selected>Espanol</option>
+                    <option>Ingles</option>
+                    <option>Portugues</option>
+                  </select>
+                </div>
+                <div class="campo">
+                  <label>Nivel</label>
+                  <select>
+                    <option>A1 - Principiante</option>
+                    <option>A2 - Basico</option>
+                    <option>B1 - Intermedio</option>
+                    <option>B2 - Intermedio alto</option>
+                    <option selected>C1 - Avanzado</option>
+                    <option>C2 - Nativo</option>
+                  </select>
+                </div>
+              </div>
+              <div class="campo">
+                <label>Certificacion (opcional)</label>
+                <input type="text" placeholder="Ej. DELE C1 2024, TOEFL 95..." />
+              </div>
+            </div>
+          </div>
+
+          <!-- Documentos -->
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Documentos Requeridos</h3>
+              <p>Adjunta los archivos en formato PDF (max. 5 MB cada uno)</p>
+            </div>
+            <div class="tarjeta-cuerpo">
+
+              <div class="campo">
+                <label>Certificado de Notas Oficial</label>
+                <div class="zona-carga" onclick="this.querySelector('input').click()">
+                  <input type="file" accept=".pdf" />
+                  <p><strong>Haz clic para subir</strong> o arrastra tu archivo aqui</p>
+                  <p style="font-size:11px;margin-top:4px;">PDF - max. 5 MB</p>
+                </div>
+                <div class="archivo-cargado">
+                  <span class="archivo-nombre">certificado_notas_2026.pdf</span>
+                  <span class="archivo-tamano">1.2 MB</span>
+                  <span class="archivo-ok">OK</span>
+                </div>
+              </div>
+
+              <div class="campo">
+                <label>Documento de Identidad</label>
+                <div class="zona-carga" onclick="this.querySelector('input').click()">
+                  <input type="file" accept=".pdf,.jpg,.png" />
+                  <p><strong>Haz clic para subir</strong> o arrastra tu archivo aqui</p>
+                  <p style="font-size:11px;margin-top:4px;">PDF / JPG / PNG - max. 5 MB</p>
+                </div>
+                <div class="archivo-cargado">
+                  <span class="archivo-nombre">cedula_vanegas.pdf</span>
+                  <span class="archivo-tamano">0.8 MB</span>
+                  <span class="archivo-ok">OK</span>
+                </div>
+              </div>
+
+              <div class="campo">
+                <label>Carta de Recomendacion</label>
+                <div class="zona-carga" onclick="this.querySelector('input').click()">
+                  <input type="file" accept=".pdf" />
+                  <p><strong>Haz clic para subir</strong> o arrastra tu archivo aqui</p>
+                  <p style="font-size:11px;margin-top:4px;">PDF - max. 5 MB</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Carta de motivacion -->
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Carta de Motivacion</h3>
+              <p>Explica por que quieres participar en este programa</p>
+            </div>
+            <div class="tarjeta-cuerpo">
+              <div class="campo">
+                <label>Escribe tu carta de motivacion</label>
+                <textarea style="min-height:160px;" placeholder="Describe tus motivaciones, metas academicas y profesionales, y como este intercambio contribuira a tu formacion..."></textarea>
+                <p class="nota">Minimo 300 palabras. Se especifico sobre por que elegiste esta universidad.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="acciones">
+            <button class="btn-secundario">Guardar borrador</button>
+            <button class="btn-azul" onclick="document.querySelector('.modal-fondo').classList.add('abierto')">
+              Enviar Postulacion
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Resumen -->
+        <div class="panel-resumen">
+
+          <!-- Progreso -->
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Progreso de la solicitud</h3>
+            </div>
+            <div class="progreso-wrap">
+              <div class="progreso-etiqueta">
+                <span>Completado</span>
+                <span>60%</span>
+              </div>
+              <div class="barra-fondo">
+                <div class="barra-relleno" style="width:60%;"></div>
+              </div>
+              <p class="progreso-nota">Faltan 2 documentos por completar.</p>
+            </div>
+            <div class="checklist">
+              <div class="check-item"><span class="check-ok">OK</span> Datos personales</div>
+              <div class="check-item"><span class="check-ok">OK</span> Certificado de notas</div>
+              <div class="check-item"><span class="check-ok">OK</span> Documento de identidad</div>
+              <div class="check-item"><span class="check-pendiente">--</span> Carta de recomendacion</div>
+              <div class="check-item"><span class="check-pendiente">--</span> Carta de motivacion</div>
+              <div class="check-item"><span class="check-pendiente">--</span> Revision final</div>
+            </div>
+          </div>
+
+          <!-- Datos convocatoria -->
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Datos de la Convocatoria</h3>
+            </div>
+            <div class="dato-resumen">
+              <div class="label">Universidad</div>
+              <div class="valor">Univ. Complutense de Madrid</div>
+            </div>
+            <div class="dato-resumen">
+              <div class="label">Pais</div>
+              <div class="valor">Espana</div>
+            </div>
+            <div class="dato-resumen">
+              <div class="label">Duracion</div>
+              <div class="valor">1 semestre</div>
+            </div>
+            <div class="dato-resumen">
+              <div class="label">Promedio requerido</div>
+              <div class="valor">3.5 / 5.0</div>
+            </div>
+            <div class="dato-resumen">
+              <div class="label">Tu promedio</div>
+              <div class="valor" style="color:var(--verde);">4.1 / 5.0 - Cumple</div>
+            </div>
+            <div class="dato-resumen">
+              <div class="label">Cierre postulacion</div>
+              <div class="valor" style="color:var(--rojo);">30 abr 2026</div>
+            </div>
+          </div>
+
+          <!-- Ayuda -->
+          <div class="tarjeta">
+            <div class="tarjeta-cuerpo" style="font-size:13px;color:var(--gris-medio);line-height:1.6;">
+              <p style="font-weight:700;color:var(--azul);margin-bottom:6px;">Recomendaciones</p>
+              Asegurate de que todos los documentos esten actualizados y firmados. La carta de motivacion debe estar en espanol y ser original.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmacion -->
+  <div class="modal-fondo">
+    <div class="modal">
+      <h3>Postulacion Enviada</h3>
+      <p>Tu solicitud para la <strong>Universidad Complutense de Madrid</strong> fue enviada exitosamente. Recibiras una notificacion cuando sea revisada.</p>
+      <button class="btn-azul" onclick="window.location.href='dashboard.html'">Ir al Panel Principal</button>
+    </div>
+  </div>
+
+  <script>
+    function irPaso(n) {
+      const pasos = document.querySelectorAll('.paso');
+      pasos.forEach((p, i) => {
+        p.classList.remove('activo', 'completado');
+        const num = p.querySelector('.num-paso');
+        if (i + 1 < n) {
+          p.classList.add('completado');
+          num.textContent = 'OK';
+        } else if (i + 1 === n) {
+          p.classList.add('activo');
+          num.textContent = i + 1;
+        } else {
+          num.textContent = i + 1;
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

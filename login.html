@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar Sesion - Intercambios Academicos</title>
+  <style>
+    :root {
+      --azul:       #003087;
+      --azul-hover: #00256e;
+      --rojo:       #c8102e;
+      --gris-texto: #333333;
+      --gris-medio: #666666;
+      --gris-borde: #cccccc;
+      --gris-fondo: #f4f4f4;
+      --blanco:     #ffffff;
+      --verde:      #1a6b3a;
+      --verde-fondo:#e8f5ee;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--gris-fondo);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contenedor {
+      display: flex;
+      width: 820px;
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+    }
+
+    /* Panel izquierdo */
+    .panel-izq {
+      width: 320px;
+      background: var(--azul);
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .panel-izq .logo {
+      width: 64px;
+      height: 64px;
+      background: var(--blanco);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .panel-izq .logo span {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--azul);
+      letter-spacing: -1px;
+    }
+
+    .panel-izq h1 {
+      color: var(--blanco);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .panel-izq p {
+      color: rgba(255,255,255,0.65);
+      font-size: 13px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .caracteristica {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding: 14px 0;
+    }
+
+    .caracteristica:last-child {
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .caracteristica h3 {
+      color: var(--blanco);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .caracteristica p {
+      color: rgba(255,255,255,0.55);
+      font-size: 12px;
+      margin-bottom: 0;
+    }
+
+    /* Panel derecho */
+    .panel-der {
+      flex: 1;
+      padding: 48px 44px;
+    }
+
+    .panel-der h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gris-texto);
+      margin-bottom: 6px;
+    }
+
+    .panel-der .subtitulo {
+      font-size: 13.5px;
+      color: var(--gris-medio);
+      margin-bottom: 28px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--gris-borde);
+      margin-bottom: 26px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gris-medio);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+
+    .tab.activo {
+      color: var(--azul);
+      border-bottom-color: var(--azul);
+    }
+
+    /* Campos */
+    .campo {
+      margin-bottom: 16px;
+    }
+
+    .campo label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gris-texto);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+    }
+
+    .campo input,
+    .campo select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gris-borde);
+      font-size: 14px;
+      color: var(--gris-texto);
+      background: var(--blanco);
+      outline: none;
+    }
+
+    .campo input:focus,
+    .campo select:focus {
+      border-color: var(--azul);
+    }
+
+    .fila {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .opciones {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .opciones label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--gris-medio);
+      cursor: pointer;
+    }
+
+    .opciones a {
+      color: var(--azul);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .btn-ingresar {
+      width: 100%;
+      background: var(--azul);
+      color: var(--blanco);
+      border: none;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-ingresar:hover {
+      background: var(--azul-hover);
+    }
+
+    .separador {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      font-size: 12px;
+      color: var(--gris-medio);
+    }
+
+    .separador::before,
+    .separador::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gris-borde);
+    }
+
+    .btn-google {
+      width: 100%;
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gris-texto);
+      cursor: pointer;
+    }
+
+    .btn-google:hover {
+      background: var(--gris-fondo);
+    }
+
+    .pie {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--gris-medio);
+    }
+
+    .pie a {
+      color: var(--azul);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .alerta-ok {
+      background: var(--verde-fondo);
+      border: 1px solid #a8d5b9;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--verde);
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    #panel-registro { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+
+    <!-- Panel izquierdo -->
+    <div class="panel-izq">
+      <div class="logo"><span>UP</span></div>
+      <h1>Universidad Piloto de Colombia</h1>
+      <p>Sistema de Gestion de Intercambios Academicos</p>
+
+      <div class="caracteristica">
+        <h3>Convocatorias en tiempo real</h3>
+        <p>Consulta todos los programas disponibles desde un solo lugar.</p>
+      </div>
+      <div class="caracteristica">
+        <h3>Postulacion simplificada</h3>
+        <p>Aplica a programas internacionales con un formulario digital.</p>
+      </div>
+      <div class="caracteristica">
+        <h3>Seguimiento del proceso</h3>
+        <p>Consulta el estado de tu solicitud en cualquier momento.</p>
+      </div>
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="panel-der">
+      <h2>Bienvenido</h2>
+      <p class="subtitulo">Ingresa a tu cuenta o crea una nueva para comenzar.</p>
+
+      <div class="tabs">
+        <button class="tab activo" onclick="mostrarTab('login')">Iniciar Sesion</button>
+        <button class="tab" onclick="mostrarTab('registro')">Registrarme</button>
+      </div>
+
+      <!-- Login -->
+      <div id="panel-login">
+        <form onsubmit="event.preventDefault(); window.location.href='dashboard.html'">
+          <div class="campo">
+            <label>Correo Institucional</label>
+            <input type="email" placeholder="usuario@unipiloto.edu.co" required />
+          </div>
+          <div class="campo">
+            <label>Contrasena</label>
+            <input type="password" placeholder="Minimo 8 caracteres" required />
+          </div>
+          <div class="opciones">
+            <label><input type="checkbox" /> Recordarme</label>
+            <a href="#">Olvide mi contrasena</a>
+          </div>
+          <button type="submit" class="btn-ingresar">Iniciar Sesion</button>
+          <div class="separador">o</div>
+          <button type="button" class="btn-google">Ingresar con Google Institucional</button>
+        </form>
+      </div>
+
+      <!-- Registro -->
+      <div id="panel-registro">
+        <form onsubmit="event.preventDefault(); mostrarAlerta()">
+          <div class="fila">
+            <div class="campo">
+              <label>Nombre</label>
+              <input type="text" placeholder="Juan" required />
+            </div>
+            <div class="campo">
+              <label>Apellido</label>
+              <input type="text" placeholder="Vanegas" required />
+            </div>
+          </div>
+          <div class="campo">
+            <label>Correo Institucional</label>
+            <input type="email" placeholder="usuario@unipiloto.edu.co" required />
+          </div>
+          <div class="campo">
+            <label>Codigo Estudiantil</label>
+            <input type="text" placeholder="Ej. 1920123" required />
+          </div>
+          <div class="campo">
+            <label>Programa Academico</label>
+            <select>
+              <option value="">Selecciona tu programa</option>
+              <option>Ingenieria de Sistemas</option>
+              <option>Ingenieria Civil</option>
+              <option>Ingenieria Industrial</option>
+              <option>Arquitectura</option>
+              <option>Administracion de Empresas</option>
+            </select>
+          </div>
+          <div class="fila">
+            <div class="campo">
+              <label>Contrasena</label>
+              <input type="password" placeholder="Min. 8 caracteres" required />
+            </div>
+            <div class="campo">
+              <label>Confirmar</label>
+              <input type="password" placeholder="Repite la contrasena" required />
+            </div>
+          </div>
+          <div id="alerta-ok" class="alerta-ok">Cuenta creada exitosamente. Redirigiendo...</div>
+          <button type="submit" class="btn-ingresar">Crear mi Cuenta</button>
+        </form>
+      </div>
+
+      <div class="pie">
+        Problemas para acceder? <a href="#">Contacta a soporte</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function mostrarTab(tab) {
+      const tabs = document.querySelectorAll('.tab');
+      if (tab === 'login') {
+        tabs[0].classList.add('activo');
+        tabs[1].classList.remove('activo');
+        document.getElementById('panel-login').style.display = 'block';
+        document.getElementById('panel-registro').style.display = 'none';
+      } else {
+        tabs[1].classList.add('activo');
+        tabs[0].classList.remove('activo');
+        document.getElementById('panel-login').style.display = 'none';
+        document.getElementById('panel-registro').style.display = 'block';
+      }
+    }
+
+    function mostrarAlerta() {
+      const alerta = document.getElementById('alerta-ok');
+      alerta.style.display = 'block';
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1800);
+    }
+  </script>
+
+</body>
+</html>

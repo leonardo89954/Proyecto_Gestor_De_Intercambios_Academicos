@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Usuario - Intercambios Academicos</title>
+  <style>
+    :root {
+      --azul:       #003087;
+      --azul-hover: #00256e;
+      --rojo:       #c8102e;
+      --gris-texto: #333333;
+      --gris-medio: #666666;
+      --gris-borde: #cccccc;
+      --gris-fondo: #f4f4f4;
+      --blanco:     #ffffff;
+      --verde:      #1a6b3a;
+      --verde-fondo:#e8f5ee;
+      --amarillo:   #7a5900;
+      --amarillo-fondo: #fff8e1;
+      --rojo-fondo: #fdecea;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--gris-fondo);
+      color: var(--gris-texto);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 230px;
+      background: var(--azul);
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .sidebar-logo .cuadro-logo {
+      width: 52px;
+      height: 52px;
+      background: var(--blanco);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-logo .cuadro-logo span {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--azul);
+    }
+
+    .sidebar-logo h2 {
+      color: var(--blanco);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .sidebar-logo p {
+      color: rgba(255,255,255,0.55);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 0;
+      overflow-y: auto;
+    }
+
+    .nav-titulo {
+      color: rgba(255,255,255,0.4);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 20px 4px;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 10px 20px;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 13.5px;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--blanco);
+    }
+
+    .nav-item.activo {
+      background: rgba(255,255,255,0.12);
+      color: var(--blanco);
+      border-left-color: var(--rojo);
+      font-weight: 600;
+    }
+
+    .sidebar-pie {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .usuario-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      background: var(--rojo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blanco);
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .usuario-mini p {
+      color: var(--blanco);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .usuario-mini span {
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+    }
+
+    /* Main */
+    .main {
+      margin-left: 230px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Barra superior */
+    .topbar {
+      background: var(--blanco);
+      border-bottom: 1px solid var(--gris-borde);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--azul);
+    }
+
+    .topbar p {
+      font-size: 12px;
+      color: var(--gris-medio);
+    }
+
+    .btn-azul {
+      background: var(--azul);
+      color: var(--blanco);
+      border: none;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-azul:hover {
+      background: var(--azul-hover);
+    }
+
+    /* Contenido */
+    .contenido {
+      padding: 24px 28px;
+    }
+
+    /* Banner bienvenida */
+    .banner {
+      background: var(--azul);
+      padding: 22px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .banner h2 {
+      color: var(--blanco);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .banner p {
+      color: rgba(255,255,255,0.70);
+      font-size: 13px;
+    }
+
+    .btn-blanco {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.5);
+      color: var(--blanco);
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-blanco:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Metricas */
+    .metricas {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .metrica {
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+      padding: 18px 20px;
+    }
+
+    .metrica .etiqueta {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--gris-medio);
+      letter-spacing: 0.4px;
+      margin-bottom: 8px;
+    }
+
+    .metrica .valor {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--azul);
+    }
+
+    .metrica .descripcion {
+      font-size: 12px;
+      color: var(--gris-medio);
+      margin-top: 2px;
+    }
+
+    /* Grid principal */
+    .grid-principal {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 18px;
+    }
+
+    /* Tarjeta */
+    .tarjeta {
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+    }
+
+    .tarjeta-cabecera {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--gris-borde);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tarjeta-cabecera h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--azul);
+    }
+
+    .btn-link {
+      background: none;
+      border: none;
+      color: var(--azul);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Tabla */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      background: var(--gris-fondo);
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--gris-medio);
+      border-bottom: 1px solid var(--gris-borde);
+    }
+
+    tbody td {
+      padding: 13px 16px;
+      font-size: 13.5px;
+      border-bottom: 1px solid var(--gris-borde);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: var(--gris-fondo);
+    }
+
+    .univ-nombre {
+      font-weight: 600;
+      font-size: 13.5px;
+    }
+
+    .univ-pais {
+      font-size: 12px;
+      color: var(--gris-medio);
+    }
+
+    /* Estado badges */
+    .estado {
+      display: inline-block;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .estado-revision {
+      background: var(--amarillo-fondo);
+      color: var(--amarillo);
+    }
+
+    .estado-aprobada {
+      background: var(--verde-fondo);
+      color: var(--verde);
+    }
+
+    .estado-rechazada {
+      background: var(--rojo-fondo);
+      color: var(--rojo);
+    }
+
+    /* Panel lateral */
+    .panel-lateral {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Barra de progreso */
+    .progreso-wrap {
+      padding: 16px 20px;
+    }
+
+    .progreso-etiqueta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .barra-fondo {
+      background: var(--gris-borde);
+      height: 8px;
+    }
+
+    .barra-relleno {
+      height: 8px;
+      background: var(--azul);
+    }
+
+    .progreso-nota {
+      font-size: 12px;
+      color: var(--gris-medio);
+      margin-top: 6px;
+    }
+
+    /* Lista documentos */
+    .lista-docs {
+      padding: 0 20px 12px;
+    }
+
+    .doc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gris-borde);
+      font-size: 13px;
+    }
+
+    .doc-item:last-child {
+      border-bottom: none;
+    }
+
+    .doc-ok {
+      color: var(--verde);
+      font-weight: 700;
+    }
+
+    .doc-pendiente {
+      color: var(--amarillo);
+      font-weight: 700;
+    }
+
+    /* Convocatorias activas */
+    .conv-item {
+      padding: 13px 20px;
+      border-bottom: 1px solid var(--gris-borde);
+    }
+
+    .conv-item:last-child {
+      border-bottom: none;
+    }
+
+    .conv-item h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .conv-item .pais {
+      font-size: 12px;
+      color: var(--gris-medio);
+    }
+
+    .conv-item .fecha {
+      font-size: 12px;
+      color: var(--rojo);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="cuadro-logo"><span>UP</span></div>
+      <h2>Universidad Piloto de Colombia</h2>
+      <p>Intercambios Academicos</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <p class="nav-titulo">Principal</p>
+      <a class="nav-item activo" href="dashboard.html">Panel Principal</a>
+      <a class="nav-item" href="convocatorias.html">Convocatorias</a>
+      <a class="nav-item" href="#">Mis Postulaciones</a>
+      <a class="nav-item" href="#">Mis Documentos</a>
+
+      <p class="nav-titulo">Seguimiento</p>
+      <a class="nav-item" href="#">Notificaciones</a>
+      <a class="nav-item" href="#">Estado de Solicitudes</a>
+
+      <p class="nav-titulo">Cuenta</p>
+      <a class="nav-item" href="#">Mi Perfil</a>
+      <a class="nav-item" href="#">Configuracion</a>
+      <a class="nav-item" href="login.html">Cerrar Sesion</a>
+    </nav>
+
+    <div class="sidebar-pie">
+      <div class="usuario-mini">
+        <div class="avatar">JV</div>
+        <div>
+          <p>Juan Vanegas</p>
+          <span>Ing. de Sistemas</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>Panel de Usuario</h1>
+        <p>Viernes, 3 de abril de 2026</p>
+      </div>
+      <button class="btn-azul" onclick="window.location.href='convocatorias.html'">+ Nueva Postulacion</button>
+    </header>
+
+    <div class="contenido">
+
+      <!-- Banner -->
+      <div class="banner">
+        <div>
+          <h2>Bienvenido, Juan</h2>
+          <p>Tienes 3 convocatorias activas disponibles. Revisa tus opciones de intercambio.</p>
+        </div>
+        <button class="btn-blanco" onclick="window.location.href='convocatorias.html'">Ver Convocatorias</button>
+      </div>
+
+      <!-- Metricas -->
+      <div class="metricas">
+        <div class="metrica">
+          <div class="etiqueta">Postulaciones</div>
+          <div class="valor">3</div>
+          <div class="descripcion">Total enviadas</div>
+        </div>
+        <div class="metrica">
+          <div class="etiqueta">En Revision</div>
+          <div class="valor" style="color:var(--amarillo);">2</div>
+          <div class="descripcion">Pendientes de respuesta</div>
+        </div>
+        <div class="metrica">
+          <div class="etiqueta">Aprobadas</div>
+          <div class="valor" style="color:var(--verde);">1</div>
+          <div class="descripcion">Listas para continuar</div>
+        </div>
+        <div class="metrica">
+          <div class="etiqueta">Convocatorias</div>
+          <div class="valor">3</div>
+          <div class="descripcion">Disponibles ahora</div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="grid-principal">
+
+        <!-- Tabla de postulaciones -->
+        <div>
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Mis Postulaciones</h3>
+              <button class="btn-link">Ver todas</button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Universidad</th>
+                  <th>Programa</th>
+                  <th>Fecha envio</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="univ-nombre">Univ. de Chile</div>
+                    <div class="univ-pais">Chile</div>
+                  </td>
+                  <td>Ingenieria de Software</td>
+                  <td>15 mar 2026</td>
+                  <td><span class="estado estado-aprobada">Aprobada</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="univ-nombre">Univ. de Buenos Aires</div>
+                    <div class="univ-pais">Argentina</div>
+                  </td>
+                  <td>Sistemas de Informacion</td>
+                  <td>22 mar 2026</td>
+                  <td><span class="estado estado-revision">En revision</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="univ-nombre">UNAM</div>
+                    <div class="univ-pais">Mexico</div>
+                  </td>
+                  <td>Ciencias de la Computacion</td>
+                  <td>28 mar 2026</td>
+                  <td><span class="estado estado-revision">En revision</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Panel lateral -->
+        <div class="panel-lateral">
+
+          <!-- Perfil -->
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Perfil del Estudiante</h3>
+              <span style="font-size:12px;color:var(--gris-medio);">70%</span>
+            </div>
+            <div class="progreso-wrap">
+              <div class="progreso-etiqueta">
+                <span>Progreso del perfil</span>
+                <span>70%</span>
+              </div>
+              <div class="barra-fondo">
+                <div class="barra-relleno" style="width:70%;"></div>
+              </div>
+              <p class="progreso-nota">Completa tu perfil para aumentar tus posibilidades.</p>
+            </div>
+            <div class="lista-docs">
+              <div class="doc-item">
+                <span>Carta de motivacion</span>
+                <span class="doc-ok">OK</span>
+              </div>
+              <div class="doc-item">
+                <span>Documento de identidad</span>
+                <span class="doc-ok">OK</span>
+              </div>
+              <div class="doc-item">
+                <span>Notas academicas</span>
+                <span class="doc-ok">OK</span>
+              </div>
+              <div class="doc-item">
+                <span>Certificado de idioma</span>
+                <span class="doc-pendiente">Pendiente</span>
+              </div>
+              <div class="doc-item">
+                <span>Carta de recomendacion</span>
+                <span class="doc-pendiente">Pendiente</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Convocatorias activas -->
+          <div class="tarjeta">
+            <div class="tarjeta-cabecera">
+              <h3>Convocatorias Activas</h3>
+              <button class="btn-link" onclick="window.location.href='convocatorias.html'">Ver mas</button>
+            </div>
+            <div class="conv-item">
+              <h4>Univ. Complutense de Madrid</h4>
+              <div class="pais">Espana - Ingenieria</div>
+              <div class="fecha">Cierra: 30 abr 2026</div>
+            </div>
+            <div class="conv-item">
+              <h4>Univ. de los Andes</h4>
+              <div class="pais">Colombia - Sistemas</div>
+              <div class="fecha">Cierra: 15 may 2026</div>
+            </div>
+            <div class="conv-item">
+              <h4>Univ. de Sao Paulo</h4>
+              <div class="pais">Brasil - Tecnologia</div>
+              <div class="fecha">Cierra: 20 may 2026</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
